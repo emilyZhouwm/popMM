@@ -27,6 +27,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(44, 0, 0, 0);
+    [_bottomView layoutIfNeeded];
     _bottomH = _bottomView.frame.size.height;
 }
 
@@ -115,7 +116,7 @@
     _topLayout.priority = 750;
     [_tableView setNeedsLayout];
     [UIView animateWithDuration:0.2 animations:^{
-        [_tableView layoutIfNeeded];
+        [_tableView.superview layoutIfNeeded];
         _backView.alpha = 1;
     }];
 }
@@ -125,7 +126,7 @@
     _topLayout.priority = 249;
     [_tableView setNeedsLayout];
     [UIView animateWithDuration:0.2 animations:^{
-        [_tableView layoutIfNeeded];
+        [_tableView.superview layoutIfNeeded];
         _backView.alpha = 0;
     }];
 }
