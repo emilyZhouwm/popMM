@@ -11,7 +11,9 @@
 @interface ViewController ()
 {
     CGFloat _bottomH;
+    CGFloat _headH;
 }
+
 @property (weak, nonatomic) IBOutlet UIView *backView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *topLayout;
@@ -26,9 +28,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(44, 0, 0, 0);
+    _headH = 50;
     [_bottomView layoutIfNeeded];
     _bottomH = _bottomView.frame.size.height;
+    _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(_headH, 0, _bottomH, 0);
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,15 +43,13 @@
 #pragma mark - UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return 18;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"cell";
-
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    [cell viewWithTag:999].hidden = indexPath.row == 0 ? FALSE : TRUE;
     return cell;
 }
 
@@ -61,15 +62,18 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 44;
+    return _headH;
 }
 
 - (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, _headH)];
     v.backgroundColor = [UIColor whiteColor];
-    UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, self.view.frame.size.width - 32, 44)];
-    l.text = @"只是头部";
+    UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, _headH - 1, self.view.frame.size.width, 1)];
+    line.backgroundColor = [UIColor colorWithRed:0.91 green:0.91 blue:0.91 alpha:0.6];
+    [v addSubview:line];
+    UILabel *l = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, self.view.frame.size.width - 32, _headH)];
+    l.text = @"循环播放";
     [v addSubview:l];
     return v;
 }
@@ -99,13 +103,13 @@
         }
     }
     if (scrollView.contentOffset.y <= 0) {
-        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(44 - scrollView.contentOffset.y, 0, 0, 0);
+        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(_headH - scrollView.contentOffset.y, 0, _bottomH, 0);
     }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    if (scrollView.contentOffset.y < -100) {
+    if (scrollView.contentOffset.y < -60) {
         [self hideAction];
     }
 }
