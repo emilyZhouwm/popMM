@@ -30,7 +30,13 @@
     // Do any additional setup after loading the view, typically from a nib.
     _headH = 50;
     [_bottomView layoutIfNeeded];
-    _bottomH = _bottomView.frame.size.height;
+    CGFloat h = 0;
+    if (@available(iOS 11.0, *)) {
+        if ([[UIApplication sharedApplication] delegate].window.safeAreaInsets.bottom > 0) {
+            h = 38;
+        }
+    }
+    _bottomH = _bottomView.frame.size.height + h;
     _tableView.scrollIndicatorInsets = UIEdgeInsetsMake(_headH, 0, _bottomH, 0);
 }
 
